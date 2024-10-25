@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../shared/Navbar'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
@@ -22,13 +22,13 @@ const Signup = () => {
         phoneNumber: "",
         password: "",
         role: "",
-        file: null,
+        file: "",
     })
     const changeEventHandler = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value });
     }
     const changeFileHandler = (e) => {
-        setInput({ ...input, file: e.target.value[0] });
+        setInput({ ...input, file: e.target.files?.[0] });
     }
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -60,6 +60,11 @@ const Signup = () => {
             dispatch(setLoading(false))
         }
     }
+    useEffect(()=>{
+        if(user){
+            navigate('/')
+        }
+    })
     return (
         <div>
             <Navbar />
