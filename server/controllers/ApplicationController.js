@@ -1,5 +1,5 @@
-import { Application } from "../models/Application.model";
-import { Job } from "../models/job.model";
+import { Application } from "../models/Application.model.js";
+import { Job } from "../models/job.model.js";
 
 export const applyJob = async (req, res) => {
     try {
@@ -8,7 +8,7 @@ export const applyJob = async (req, res) => {
         if (!jobId) {
             return res.status(400).json({
                 message: "Job id is required",
-                success: true,
+                success: false,
             })
         }
         // if user is already applied 
@@ -48,10 +48,11 @@ export const getAppliedJobs = async (req, res) => {
     try {
         const userId = req.id;
         const application = await Application.find({ applicant: userId }).sort({ createdAt: -1 }).populate({
-            path: "Job",
+            path: "job",
             options: { sort: { createdAt: -1 } },
             populate: {
-                path: "company"
+                path: "company",
+                options: { sort: { createdAt: -1 } }
             }
         });
         if (!application) {
@@ -71,7 +72,7 @@ export const getAppliedJobs = async (req, res) => {
 
 export const getApplicants = async (req, res) => {
     try {
-        const jonId = req.params.id;
+        const jobId = req.params.id;
         const job = await Job.findById(jobId).populate({
             path: 'applications',
             options: { sort: { createdAt: -1 } },
@@ -104,13 +105,14 @@ export const updateStatus = async (req, res) => {
         // Find the application by application id 
         const application = await Application.findOne({ _id: applicationId });
         if (!application) {
-            return res.status({
+            return res.status(404).json({
                 message: "Application not found ",
                 success: false
             })
         }
         application.status = status.toLowerCase();
         await application.save();
+        
         return res.status(200).json({
             message: 'Status updated successfully.',
             success: true,

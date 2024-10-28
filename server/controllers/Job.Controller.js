@@ -3,7 +3,7 @@ import { Job } from "../models/job.model.js"
 export const postJob = async (req, res) => {
     try {
         const { title, description, requirements, salary, location, jobType, experience, position, companyId } = req.body;
-        const userId = req.id;
+        const userId = req.id; //user id 
         if (!title || !description || !requirements || !salary || !location || !jobType || !experience || !position || !companyId) {
             return res.status(400).json({ message: "Fill all the forms", success: false })
         }
@@ -21,8 +21,8 @@ export const postJob = async (req, res) => {
         })
         return res.status(201).json({
             message: "New Job Created Successfully",
+            job,
             success: true,
-            job
         })
     } catch (error) {
         console.log(error)
@@ -48,7 +48,7 @@ export const getAllJobs = async (req, res) => {
         }
         return res.status(200).json({ jobs, success: true })
     } catch (error) {
-
+        console.log(error)
     }
 }
 
@@ -64,16 +64,19 @@ export const getJobById = async (req, res) => {
         }
         return res.status(200).json({ job, success: true })
     } catch (error) {
-
+        console.log(error)
     }
 }
 
 export const getAdminJobs = async (req, res) => {
     try {
         const adminId = req.id;
-        const jobs = await Job.find({ created_by: adminId });
+        const jobs = await Job.find({ created_by: adminId }).populate({
+            path:"company",
+            createdAt:-1
+        });
         if (!jobs) {
-            return res.status(404).json({ message: "Jobs Not found.", success: true })
+            return res.status(404).json({ message: "Jobs Not found.", success: false })
         }
         return res.status(200).json({ jobs, success: true })
     } catch (error) {

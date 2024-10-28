@@ -15,6 +15,7 @@ import { Loader } from 'lucide-react'
 const Signup = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { user } = useSelector(store => store.auth)
     const { loading } = useSelector(store => store.auth)
     const [input, setInput] = useState({
         fullname: "",
@@ -64,7 +65,7 @@ const Signup = () => {
         if(user){
             navigate('/')
         }
-    })
+    },[])
     return (
         <div>
             <Navbar />

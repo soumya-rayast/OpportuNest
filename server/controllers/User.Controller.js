@@ -8,7 +8,11 @@ export const signUp = async (req, res) => {
     try {
         const { fullname, email, phoneNumber, password, role } = req.body;
         if (!fullname || !email || !phoneNumber || !password || !role) {
-            return res.status(400).json({ message: "Please Fill all the form", success: false });
+            return res.status(400).
+                json({
+                    message: "Please Fill all the form",
+                    success: false
+                });
         }
         const file = req.file;
         const fileUri = getDataUri(file);
@@ -29,7 +33,11 @@ export const signUp = async (req, res) => {
                 profilePhoto: cloudResponse.secure_url,
             }
         })
-        return res.status(201).json({ message: 'Account created successfully', success: true })
+        return res.status(201).
+            json({
+                message: 'Account created successfully',
+                success: true
+            })
     } catch (error) {
         console.log(error)
     }
@@ -38,7 +46,11 @@ export const signIn = async (req, res) => {
     try {
         const { email, password, role } = req.body;
         if (!email || !password || !role) {
-            return res.status(400).json({ message: "Please Fill all the form", success: false });
+            return res.status(400).
+                json({
+                    message: "Please Fill all the form",
+                    success: false
+                });
         }
         let user = await User.findOne({ email });
         if (!user) {
@@ -60,7 +72,6 @@ export const signIn = async (req, res) => {
             userId: user._id
         }
         const token = await jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: "1d" });
-
         user = {
             _id: user._id,
             fullname: user.fullname,
@@ -69,7 +80,7 @@ export const signIn = async (req, res) => {
             role: user.role,
             profile: user.profile,
         }
-        return res.status(200).cookie('token', token, { maxAge: 1 * 24 * 60 * 1000, httpsOnly: true, sameSite: 'strict' })
+        return res.status(200).cookie('token', token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpsOnly: true, sameSite: 'strict' })
             .json({ message: `Welcome Back `, user, success: true })
     } catch (error) {
         console.log(error)
@@ -78,7 +89,8 @@ export const signIn = async (req, res) => {
 
 export const logout = async (req, res) => {
     try {
-        return res.status(200).cookie("token", "", { maxAge: 0 }).json({ message: "Logout out successfully", success: true })
+        return res.status(200).cookie("token", "", { maxAge: 0 }).
+            json({ message: "Logout out successfully", success: true })
     } catch (error) {
         console.log(error)
     }

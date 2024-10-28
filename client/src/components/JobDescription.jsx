@@ -13,8 +13,12 @@ const JobDescription = () => {
     const { singleJob } = useSelector(store => store.job)
     const { user } = useSelector(store => store.auth)
     
-    const isIntiallyApplied = singleJob?.applications?.some(application => application === user?._id) || false;
-    const [isApplied ,setIsApplied] = useState(isIntiallyApplied)
+    const isInitiallyApplied = singleJob?.applications?.some(application => application === user?._id) || false;
+    const [isApplied ,setIsApplied] = useState(isInitiallyApplied)
+    const params = useParams()
+    const jobId = params.id;
+    const dispatch = useDispatch();
+
     const applyJobHandle = async () => {
         try {
             const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, { withCredentials: true });
@@ -30,13 +34,10 @@ const JobDescription = () => {
             toast.error(error.response.data.message)
         }
     }
-    const params = useParams()
-    const jobId = params.id;
-    const dispatch = useDispatch();
     useEffect(() => {
         const fetchSingleJob = async () => {
             try {
-                const res = await axios.get(`${JOB_API_END_POINT}/${jobId}`, { withCredentials: true });
+                const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`, { withCredentials: true });
                 if (res.data.success) {
                     dispatch(setSingleJob(res.data.job))
                     setIsApplied(res.data.job.applications.some(application=>application.applicant === user?._id))
@@ -47,6 +48,7 @@ const JobDescription = () => {
         }
         fetchSingleJob();
     }, [jobId, dispatch, user?._id])
+    
     return (
         <div>
             <Navbar />
