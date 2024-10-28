@@ -1,7 +1,7 @@
 import { Avatar, AvatarImage } from '@radix-ui/react-avatar'
 import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from '@radix-ui/react-popover'
-import { LogOut, Menu, MenuIcon, User2 } from 'lucide-react'
+import { LogOut, Menu, MenuIcon, Save, User2 } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'sonner'
@@ -92,9 +92,15 @@ const Navbar = () => {
                                     <div className=' flex flex-col text-gray-600'>
                                         {
                                             user && user.role === "student" && (
-                                                <div className='flex w-fit items-center gap-2 cursor-pointer'>
-                                                    <User2 />
-                                                    <Button variant="link"><Link to='/profile'>View Profile</Link></Button>
+                                                <div>
+                                                    <div className='flex w-fit items-center gap-2 cursor-pointer'>
+                                                        <User2 />
+                                                        <Button variant="link"><Link to='/profile'>View Profile</Link></Button>
+                                                    </div>
+                                                    <div className='flex w-fit items-center gap-2 cursor-pointer'>
+                                                        <Save />
+                                                        <Button variant="link"><Link to='/saveForLater'>Saved Jobs</Link></Button>
+                                                    </div>
                                                 </div>
                                             )
                                         }

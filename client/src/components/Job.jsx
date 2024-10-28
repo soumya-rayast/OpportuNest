@@ -1,26 +1,34 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Button } from './ui/button';
 import { Bookmark } from 'lucide-react';
 import { Avatar, AvatarImage } from '@radix-ui/react-avatar';
 import { Badge } from './ui/badge';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { JOB_API_END_POINT } from '@/utils/constant';
+import { toast } from 'sonner';
 
 const Job = ({ job }) => {
     const navigate = useNavigate();
-
-    // const daysAgo = useMemo(() => {
-    //     if (!job?.createdAt) return null;
-    //     const createdAt = new Date(job.createdAt);
-    //     const currentTime = new Date();
-    //     const timeDifference = currentTime - createdAt;
-    //     return Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    // }, [job?.createdAt]);
-
-    const daysAgo = (mongodbTime)=>{
+    const [isSaved, setIsSaved] = useState(false);
+    const daysAgo = (mongodbTime) => {
         const createdAt = new Date(mongodbTime);
         const currentTime = new Date();
         const timeDifference = currentTime - createdAt;
-        return Math.floor(timeDifference / (1000*24*60*60));
+        return Math.floor(timeDifference / (1000 * 24 * 60 * 60));
+    }
+    const saveForLaterHandler = async () => {
+        try {
+            const res = await axios.post(`${JOB_API_END_POINT}/saveForLater/${job._id}`, {}, { withCredentials: true });
+            if (res.data.success) {
+                toast.success("Job saved for later!");
+            } else {
+                throw new Error("Failed to save job");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error(error.response?.data?.message || 'Failed to save the job');
+        }
     }
     if (!job) {
         return <div>Loading...</div>;
@@ -30,10 +38,10 @@ const Job = ({ job }) => {
         <div className='p-5 rounded-md shadow-xl bg-white border border-gray-100 shadow-purple-300'>
             <div className='flex items-center justify-between'>
                 <p className='text-sm text-gray-500'>
-                <p className='text-sm text-gray-500'>{daysAgo(job?.createdAt) === 0 ? "Today" : `${daysAgo(job?.createdAt)} days ago`}</p>
+                    <p className='text-sm text-gray-500'>{daysAgo(job?.createdAt) === 0 ? "Today" : `${daysAgo(job?.createdAt)} days ago`}</p>
                 </p>
-                <Button className="rounded-full" size='icon' variant="outline">
-                    <Bookmark />
+                <Button className="rounded-full" size='icon' variant="outline" onClick={saveForLaterHandler} >
+                    <Bookmark className={isSaved ? "text-purple-500":""} />
                 </Button>
             </div>
             <div className='flex items-center gap-3 my-2'>
@@ -58,7 +66,7 @@ const Job = ({ job }) => {
             </div>
             <div className='flex items-center gap-4 mt-4'>
                 <Button onClick={() => navigate(`/description/${job?._id}`)} variant='outline'>Details</Button>
-                <Button className="bg-purple-500">Save For Later</Button>
+                <Button className="bg-purple-500" onClick={saveForLaterHandler} >Save For Later</Button>
             </div>
         </div>
     );

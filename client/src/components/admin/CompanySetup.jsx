@@ -71,7 +71,7 @@ const CompanySetup = () => {
     return (
         <div>
             <Navbar />
-            <div className='max-w-xl mx-auto my-10 '>
+            <div className='max-w-xl mx-auto my-10 border p-8 mt-20 rounded-md border-purple-600 '>
                 <form onSubmit={submitHandler}>
                     <div className='flex items-center gap-5 p-8'>
                         <Button onClick={()=>navigate('/admin/companies')} variant='outline' className="flex items-center gap-2 font-semibold ">
@@ -114,7 +114,7 @@ const CompanySetup = () => {
                     </div>
                     {
                         loading ? <Button className='w-full my-4'> <Loader className='mr-2 h-4 w-4 animate-spin' /> Please wait </Button> :
-                            <Button type='submit' className='w-full my-4'>Update</Button>
+                            <Button type='submit' className='w-full my-4 bg-purple-500'>Update</Button>
                     }
                 </form>
             </div>

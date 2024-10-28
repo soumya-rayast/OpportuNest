@@ -37,11 +37,12 @@ const CreateCompany = () => {
     return (
         <div>
             <Navbar />
-            <div className='max-w-4xl mx-auto'>
-                <div className='my-10'>
+            <div className='max-w-4xl mx-auto mt-20 '>
+                <div className='my-10 mx-10'>
                     <h1 className='font-bold text-2xl'>Your Company Name</h1>
                     <p className='text-gray-500'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum dolorem voluptate minima!</p>
                 </div>
+                <div className='mx-10'>
                 <Label>
                     Company Name
                 </Label>
@@ -53,7 +54,8 @@ const CreateCompany = () => {
                 />
                 <div className='flex items-center gap-2 my-10'>
                     <Button variant="outline" onClick={() => navigate('/admin/companies')}>Cancel</Button>
-                    <Button onClick={registerNewCompany}>Continue</Button>
+                    <Button onClick={registerNewCompany} className="bg-purple-600">Continue</Button>
+                </div>
                 </div>
             </div>
         </div>

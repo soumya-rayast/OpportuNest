@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 const AdminJobTable = () => {
-  const { allAdminJobs, searchJobByText } = useSelector(store => store.job);
+  const { allAdminJobs = [], searchJobByText } = useSelector(store => store.job); // Fallback to empty array
   const [filterJobs, setFilterJobs] = useState(allAdminJobs);
   const navigate = useNavigate();
 
@@ -35,39 +35,47 @@ const AdminJobTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filterJobs.map((job, index) => (
-            <TableRow key={job._id || index}>
-              <TableCell>
-                <img src={job?.company?.logo || 'default-logo.png'} className="w-10 h-10 rounded-full" alt="Company Logo" />
-              </TableCell>
-              <TableCell>{job?.company?.name}</TableCell>
-              <TableCell>{job?.title}</TableCell>
-              <TableCell>{job?.createdAt.split("T")[0]}</TableCell>
-              <TableCell className="text-right cursor-pointer">
-                <Popover>
-                  <PopoverTrigger>
-                    <MoreHorizontal />
-                  </PopoverTrigger>
-                  <PopoverContent className="w-32">
-                    <div
-                      onClick={() => navigate(`/admin/companies/${job._id}`)}
-                      className="flex items-center gap-2 w-fit cursor-pointer"
-                    >
-                      <Edit2 className="w-4" />
-                      <span>Edit</span>
-                    </div>
-                    <div 
-                      onClick={() => navigate(`/admin/jobs/${job._id}/applicants`)}
-                      className="flex items-center gap-2 w-fit cursor-pointer"
-                    >
-                      <Eye />
-                      <span>Applicants</span>
-                    </div>
-                  </PopoverContent>
-                </Popover>
+          {filterJobs.length > 0 ? (
+            filterJobs.map((job, index) => (
+              <TableRow key={job._id || index}>
+                <TableCell>
+                  <img src={job?.company?.logo || 'default-logo.png'} className="w-10 h-10 rounded-full" alt="Company Logo" />
+                </TableCell>
+                <TableCell>{job?.company?.name}</TableCell>
+                <TableCell>{job?.title}</TableCell>
+                <TableCell>{job?.createdAt?.split("T")[0]}</TableCell>
+                <TableCell className="text-right cursor-pointer">
+                  <Popover>
+                    <PopoverTrigger>
+                      <MoreHorizontal />
+                    </PopoverTrigger>
+                    <PopoverContent className="w-32">
+                      <div
+                        onClick={() => navigate(`/admin/companies/${job._id}`)}
+                        className="flex items-center gap-2 w-fit cursor-pointer"
+                      >
+                        <Edit2 className="w-4" />
+                        <span>Edit</span>
+                      </div>
+                      <div 
+                        onClick={() => navigate(`/admin/jobs/${job._id}/applicants`)}
+                        className="flex items-center gap-2 w-fit cursor-pointer"
+                      >
+                        <Eye />
+                        <span>Applicants</span>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan="5" className="text-center">
+                No jobs found
               </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
     </div>

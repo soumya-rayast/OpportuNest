@@ -57,8 +57,8 @@ const PostJob = () => {
     return (
         <div>
             <Navbar />
-            <div className='flex items-center justify-center w-screen my-5'>
-                <form action="" onSubmit={submitHandler} className='p-8 max-4-zl border border-gray-200 shadow-lg rounded-md'>
+            <div className='flex items-center justify-center w-screen my-5 mt-20  '>
+                <form action="" onSubmit={submitHandler} className='p-8 max-4-zl border border-purple-600 shadow-lg rounded-md'>
                     <div className='grid grid-cols-2 gap-2'>
                         <div>
                             <Label>Title</Label>
@@ -97,6 +97,7 @@ const PostJob = () => {
                                 name="salary"
                                 value={input.salary}
                                 onChange={changeEventHandler}
+                                placeholder="LPA"
                                 className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
                             />
                         </div>
@@ -163,7 +164,7 @@ const PostJob = () => {
 
                     {
                         loading ? <Button className='w-full my-4'> <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait </Button> :
-                            <Button type='submit' className='w-full my-4'>Post Job</Button>
+                            <Button type='submit' className='w-full my-4 bg-purple-600'>Post Job</Button>
                     }
                     {
                         companies.length === 0 && <p className='text-xs text-red-600 font-bold text-center my-3'> *Please register a company first , before posting a jobs</p>

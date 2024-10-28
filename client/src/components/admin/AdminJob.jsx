@@ -21,13 +21,14 @@ const AdminJob = () => {
         <div>
             <Navbar />
             <div className='max-w-6xl mx-auto my-10'>
-                <div className='flex items-center justify-between my-5'>
+                <div className='flex items-center justify-between my-5 mt-20 mx-2'>
                     <Input
                         className="w-fit"
                         placeholder="Filter by name,role"
                         onChange={(e) => setInput(e.target.value)}
                     />
-                    <Button onClick={() => navigate("/admin/job/create")}>Post New Job</Button>
+                    <Button onClick={() => navigate("/admin/job/create")} 
+                        className='bg-purple-600'>Post New Job</Button>
                 </div>
                 <AdminJobTable />
             </div>

@@ -32,7 +32,12 @@ const userSchema = new mongoose.Schema({
             type: String,
             default: ""
         }
-    }
+    },saveForLater:[
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref:"Job"
+        }
+    ]
 }, { timestamps: true });
 
 export const User = mongoose.model("User", userSchema)
