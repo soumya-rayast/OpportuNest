@@ -12,6 +12,8 @@ import CompanySetup from "./components/admin/CompanySetup"
 import AdminJob from "./components/admin/AdminJob"
 import PostJob from "./components/admin/PostJob"
 import Applicants from "./components/admin/Applicants"
+import './App.css'
+import SaveForLater from "./components/SaveForLater"
 const appRouter = createBrowserRouter([
   {
     path: '/',
@@ -36,6 +38,10 @@ const appRouter = createBrowserRouter([
   {
     path: '/profile',
     element: <Profile />
+  },
+  {
+    path: '/saveForLater',
+    element: <SaveForLater />
   },
   {
     path: '/description/:id',

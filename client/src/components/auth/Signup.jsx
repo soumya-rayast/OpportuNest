@@ -69,11 +69,11 @@ const Signup = () => {
     return (
         <div>
             <Navbar />
-            <div className=' flex items-center justify-center max-w-7xl mx-auto'>
-                <form onSubmit={submitHandler} className='w-1/2 border border-gray-200 rounded-md p-4 my-10'>
-                    <h1 className='font-bold text-xl mb-5'>Sign Up</h1>
+            <div className=' flex items-center justify-center max-w-7xl mx-auto mt-14 '>
+                <form onSubmit={submitHandler} className='w-1/2 border border-purple-400 shadow-2xl rounded-md p-4 my-10'>
+                    <h1 className='font-bold text-xl mb-5 text-purple-600'>Sign Up</h1>
                     <div className='my-2'>
-                        <Label>Full name</Label>
+                        <Label className='text-purple-600 m-1'>Full name</Label>
                         <Input
                             type='text'
                             placeholder='Enter Your name'
@@ -83,7 +83,7 @@ const Signup = () => {
                         />
                     </div>
                     <div className='my-2'>
-                        <Label>Email</Label>
+                        <Label className='text-purple-600 m-1'>Email</Label>
                         <Input
                             type='email'
                             placeholder='xyz@gmail.ccom'
@@ -93,7 +93,7 @@ const Signup = () => {
                         />
                     </div>
                     <div className='my-2'>
-                        <Label>Phone Number</Label>
+                        <Label className='text-purple-600 m-1'>Phone Number</Label>
                         <Input
                             type='number'
                             placeholder='+91 1234567890'
@@ -103,7 +103,7 @@ const Signup = () => {
                         />
                     </div>
                     <div className='my-2'>
-                        <Label>Password</Label>
+                        <Label className='text-purple-600 m-1'>Password</Label>
                         <Input
                             type='password'
                             placeholder='********'
@@ -123,7 +123,7 @@ const Signup = () => {
                                     checked={input.role === "student"}
                                     onChange={changeEventHandler}
                                 />
-                                <Label htmlFor="r2">Student</Label>
+                                <Label className='text-purple-600 m-1' htmlFor="r2">Student</Label>
                             </div>
                             <div className="flex items-center space-x-2">
                                 <Input
@@ -134,11 +134,11 @@ const Signup = () => {
                                     checked={input.role === "recruiter"}
                                     onChange={changeEventHandler}
                                 />
-                                <Label htmlFor="r3">Recruiter</Label>
+                                <Label className='text-purple-600 m-1' htmlFor="r3">Recruiter</Label>
                             </div>
                         </RadioGroup>
                         <div>
-                            <Label>Profile</Label>
+                            <Label className='text-purple-600 m-1' >Profile</Label>
                             <Input
                                 type="file"
                                 accept="image/*"
@@ -149,7 +149,7 @@ const Signup = () => {
                     </div>
                     {
                         loading ? <Button className='w-full my-4'> <Loader className='mr-2 h-4 w-4 animate-spin' /> Please wait </Button> :
-                            <Button type='submit' className='w-full my-4'>Signup</Button>
+                            <Button type='submit' className='w-full my-4 bg-purple-600' >Signup</Button>
                     }
                     <span>Already have an account ? <Link to='/login' className='text-purple-600'>Login</Link> </span>
                 </form>

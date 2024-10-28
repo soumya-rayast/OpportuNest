@@ -19,18 +19,20 @@ const Profile = () => {
   return (
     <div>
       <Navbar />
-      <div className='max-w-4xl mx-auto bg-white border border-gray200 rounded-2xl my-5 p-8'>
+      <div className='max-w-4xl mx-auto bg-white border shadow-md shadow-purple-300 border-purple-300  rounded-2xl my-24 p-8 '>
         <div className='flex justify-between'>
           <div className='flex items-center gap-4'>
             <Avatar className='h-24 w-24'>
-              <AvatarImage src={user?.profile?.profilePhoto} className='rounded-full w-[200px] h-[100px]' alt='profile image' />
+              <AvatarImage src={user?.profile?.profilePhoto} className='rounded-full w-[80px] h-[80px]' alt='profile image' />
             </Avatar>
             <div >
               <h1 className='font-medium text-xl'>{user?.fullname}</h1>
               <p>{user?.profile?.bio}</p>
             </div>
           </div>
-          <Button onClick={() => setOpen(true)} className='text-right' variant="outline"><Pen /></Button>
+          <Button
+            className="bg-purple-600 text-right text-white"
+            onClick={() => setOpen(true)} variant="outline"><Pen /></Button>
         </div>
         <div className='my-5'>
           <div className=' flex items-center gap-2'>
@@ -43,11 +45,13 @@ const Profile = () => {
           </div>
         </div>
         <div className='my-5'>
-          <h1>Skills</h1>
+          <h1 className='font-bold'>Skills</h1>
           <div className='flex items-center gap-1'>
             {
               user?.profile?.skills.length !== 0 ? user?.profile?.skills.map((item, index) =>
-                <Badge key={index}> {item}</Badge>
+                <Badge
+                  className="bg-purple-600"
+                  key={index}> {item}</Badge>
               ) : <span>N/A</span>
             }
           </div>
@@ -59,7 +63,7 @@ const Profile = () => {
           }
         </div>
       </div>
-      <div className='max-w-4xl mx-auto bg-white rounded-2xl'>
+      <div className='max-w-4xl mx-auto bg-white rounded-2xl '>
         <h1 className='font-bold text-lg m-1'>Applied Jobs</h1>
         <AppliedJobTable />
       </div>

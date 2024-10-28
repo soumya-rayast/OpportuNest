@@ -8,23 +8,29 @@ import { useNavigate } from 'react-router-dom';
 const Job = ({ job }) => {
     const navigate = useNavigate();
 
-    const daysAgo = useMemo(() => {
-        if (!job?.createdAt) return null;
-        const createdAt = new Date(job.createdAt);
+    // const daysAgo = useMemo(() => {
+    //     if (!job?.createdAt) return null;
+    //     const createdAt = new Date(job.createdAt);
+    //     const currentTime = new Date();
+    //     const timeDifference = currentTime - createdAt;
+    //     return Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    // }, [job?.createdAt]);
+
+    const daysAgo = (mongodbTime)=>{
+        const createdAt = new Date(mongodbTime);
         const currentTime = new Date();
         const timeDifference = currentTime - createdAt;
-        return Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    }, [job?.createdAt]);
-
+        return Math.floor(timeDifference / (1000*24*60*60));
+    }
     if (!job) {
         return <div>Loading...</div>;
     }
 
     return (
-        <div className='p-5 rounded-md shadow-xl bg-white border border-gray-100'>
+        <div className='p-5 rounded-md shadow-xl bg-white border border-gray-100 shadow-purple-300'>
             <div className='flex items-center justify-between'>
                 <p className='text-sm text-gray-500'>
-                    {daysAgo === 0 ? 'Today' : `${daysAgo} days ago`}
+                <p className='text-sm text-gray-500'>{daysAgo(job?.createdAt) === 0 ? "Today" : `${daysAgo(job?.createdAt)} days ago`}</p>
                 </p>
                 <Button className="rounded-full" size='icon' variant="outline">
                     <Bookmark />
