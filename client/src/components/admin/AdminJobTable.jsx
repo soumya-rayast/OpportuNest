@@ -1,13 +1,17 @@
+import { JOB_API_END_POINT } from '@/utils/constant';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { Popover, PopoverContent, PopoverTrigger } from '@radix-ui/react-popover';
-import { Edit2, Eye, MoreHorizontal } from 'lucide-react';
+import axios from 'axios';
+import { Delete, Eye, MoreHorizontal } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 const AdminJobTable = () => {
-  const { allAdminJobs = [], searchJobByText } = useSelector(store => store.job); // Fallback to empty array
+  const { allAdminJobs, searchJobByText } = useSelector(store => store.job);
   const [filterJobs, setFilterJobs] = useState(allAdminJobs);
+  const [deleteTrigger, setDeleteTrigger] = useState(false); // Trigger for re-filtering
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,10 +20,24 @@ const AdminJobTable = () => {
         return true;
       }
       return job?.title?.toLowerCase().includes(searchJobByText.toLowerCase()) ||
-             job?.company?.name.toLowerCase().includes(searchJobByText.toLowerCase());
+        job?.company?.name.toLowerCase().includes(searchJobByText.toLowerCase());
     });
     setFilterJobs(filteredJobs);
-  }, [allAdminJobs, searchJobByText]);
+  }, [allAdminJobs, searchJobByText, deleteTrigger]); // Add deleteTrigger to dependencies
+
+  const deleteJob = async (jobId) => {
+    if (window.confirm("Are you sure you want to delete this job?")) {
+      try {
+        await axios.delete(`${JOB_API_END_POINT}/delete/${jobId}`, { withCredentials: true });
+        setFilterJobs((prevJobs) => prevJobs.filter((job) => job._id !== jobId));
+        setDeleteTrigger(prev => !prev); // Toggle deleteTrigger to re-trigger useEffect
+        toast.success("Job deleted successfully"); // Optional: success message
+      } catch (error) {
+        console.error('Failed to delete job', error);
+        toast.error("Error deleting Job. Please try again.");
+      }
+    }
+  };
 
   return (
     <div>
@@ -49,15 +67,15 @@ const AdminJobTable = () => {
                     <PopoverTrigger>
                       <MoreHorizontal />
                     </PopoverTrigger>
-                    <PopoverContent className="w-32">
+                    <PopoverContent className="w-40 flex flex-col items-start justify-center p-4 shadow-2xl rounded-md bg-white">
                       <div
-                        onClick={() => navigate(`/admin/companies/${job._id}`)}
+                        onClick={() => deleteJob(job._id)}
                         className="flex items-center gap-2 w-fit cursor-pointer"
                       >
-                        <Edit2 className="w-4" />
-                        <span>Edit</span>
+                        <Delete className="w-4" />
+                        <span>Delete</span>
                       </div>
-                      <div 
+                      <div
                         onClick={() => navigate(`/admin/jobs/${job._id}/applicants`)}
                         className="flex items-center gap-2 w-fit cursor-pointer"
                       >

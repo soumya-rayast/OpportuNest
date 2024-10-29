@@ -31,14 +31,14 @@ const Jobs = () => {
             <div className='max-w-7xl mx-auto mt-20'>
                 <div className='flex gap-5'>
                     {/* Filter Sidebar */}
-                    <div className='w-[20%]'>
+                    <div className='w-[18%]'>
                         {/* Show Filter Icon Only on Small Screens */}
                         <div className="block sm:hidden mb-4">
                             <button 
                                 className="text-xl flex items-center gap-2"
                                 onClick={() => setShowFilters(!showFilters)}
                             >
-                                <Filter /> Filter
+                                <Filter /> Filter Jobs
                             </button>
                         </div>
                         {/* FilterCard always shown on desktop and conditionally on mobile */}
@@ -47,11 +47,11 @@ const Jobs = () => {
                         </div>
                     </div>
                     {/* Job Cards Grid */}
-                    <div className='flex-1 h-[88vh] overflow-y-auto pb-5 mx-5'>
+                    <div className='flex-1  h-[88vh] overflow-y-auto pb-5 mx-5'>
                         {allJobs.length <= 0 ? (
                             <span>Job Not Found</span>
                         ) : (
-                            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-5 mx-2'>
+                            <div className='flex flex-wrap gap-2 mt-5 '>
                                 {filterJobs.map((job) => (
                                     <motion.div key={job?._id}
                                         initial={{ opacity: 0, x: 100 }}

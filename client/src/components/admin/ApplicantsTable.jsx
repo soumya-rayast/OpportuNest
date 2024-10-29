@@ -29,7 +29,7 @@ const ApplicantsTable = () => {
                 <TableCaption>List of your recent applied users</TableCaption>
                 <TableHeader>
                     <TableRow>
-                        <TableHead>FullName</TableHead>
+                        <TableHead>Full Name</TableHead>
                         <TableHead>Email</TableHead>
                         <TableHead>Contact</TableHead>
                         <TableHead>Resume</TableHead>
@@ -45,8 +45,8 @@ const ApplicantsTable = () => {
                             <TableCell>{item?.applicant?.phoneNumber}</TableCell>
                             <TableCell className="text-blue-600 cursor-pointer">
                                 {item.applicant?.profile?.resume ? (
-                                    <a href={item?.applicant?.profile?.resume} target="_blank" rel="noopener noreferrer">
-                                        {item?.applicant?.profile?.resume}
+                                    <a href={item.applicant.profile.resume} target="_blank" rel="noopener noreferrer">
+                                        View Resume
                                     </a>
                                 ) : (
                                     <span>N/A</span>
@@ -61,7 +61,7 @@ const ApplicantsTable = () => {
                                     <PopoverContent className="w-32">
                                         {shortListedStatus.map((status, index) => (
                                             <div
-                                                onClick={() => statusHandler(status, item?._id)}
+                                                onClick={() => statusHandler(status, item._id)}
                                                 key={index}
                                                 className="flex w-fit items-center my-2 cursor-pointer"
                                             >

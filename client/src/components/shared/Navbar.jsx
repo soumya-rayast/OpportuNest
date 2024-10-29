@@ -115,7 +115,7 @@ const Navbar = () => {
                         )
                     }
                 </div>
-
+                {/* for smartphone */}
                 <div className='md:hidden m-2'>
                     <Button onClick={toggleMenu} className="text-3xl bg-purple-600">
                         {isMenuOpen ? <Menu /> : <MenuIcon />}
@@ -123,7 +123,7 @@ const Navbar = () => {
                 </div>
                 {
                     isMenuOpen && (
-                        <div className='flex flex-col gap-5 text-lg font-semibold text-black bg-white w-full mt-3 p-5 absolute top-16 left-0 shadow-md'>
+                        <div className='flex flex-col gap-5 text-lg font-semibold text-black bg-white w-full mt-3 p-5 absolute top-10 left-0 shadow-md'>
                             <ul className='flex flex-col font-medium bg-white gap-5 '>
                                 {
                                     user && user.role === "recruiter" ? (

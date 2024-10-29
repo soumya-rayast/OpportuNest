@@ -50,13 +50,13 @@ const FilterCard = () => {
         dispatch(setSearchQuery(selectedValue))
     }, [selectedValue])
     return (
-        <div className='w-full bg-white p-3 rounded-md shadow-md '>
+        <div className='w-80vw bg-white p-3 rounded-md shadow-md border border-purple-500'>
             <h1>Filter Jobs</h1>
-            <hr className='mt-3' />
+            <hr className='mt-3 ' />
             <RadioGroup onValueChange={handleChange} value={selectedValue}>
                 {
                     filterData.map((data, index) => (
-                        <div >
+                        <div key={index} >
                             <h1 className='font-bold text-lg'>{data.filterType}</h1>
                             {
                                 data.array.map((item, idx) => {

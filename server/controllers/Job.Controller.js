@@ -88,8 +88,8 @@ export const getAdminJobs = async (req, res) => {
 // save for later 
 export const saveForLater = async (req, res) => {
     try {
-        const userId = req.id; // Assuming `req.user` is set after authentication middleware
-        const { jobId } = req.params; // Corrected to access jobId from req.params
+        const userId = req.id;
+        const { jobId } = req.params; 
 
         if (!jobId) {
             return res.status(400).json({ message: "Job ID is required", success: false });
@@ -141,5 +141,36 @@ export const getSavedJobs = async (req, res) => {
     } catch (error) {
         console.error(error); // Use console.error for better error logging
         res.status(500).json({ message: "Failed to get saved jobs", success: false });
+    }
+};
+// delete job 
+
+
+export const deleteJob = async (req, res) => { 
+    try {
+        const adminId = req.id; // Extract admin ID from the request
+        const { jobId } = req.params; // Get job ID from request parameters
+
+        // Validate job ID
+        if (!jobId) {
+            return res.status(400).json({ message: "Job ID is required", success: false });
+        }
+
+        // Find the job that the admin created
+        const job = await Job.findOne({ _id: jobId, created_by: adminId });
+        
+        // Check if the job exists and if the admin is authorized to delete it
+        if (!job) {
+            return res.status(404).json({ message: "Job not found or you are not authorized to delete this job", success: false });
+        }
+
+        // Remove the job
+        await job.remove();
+
+        // Respond with success message
+        return res.status(200).json({ message: "Job deleted successfully", success: true });
+    } catch (error) {
+        console.error(error); // Log the error for debugging
+        return res.status(500).json({ message: "Failed to delete the job", success: false });
     }
 };
