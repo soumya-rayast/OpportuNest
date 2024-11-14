@@ -5,7 +5,7 @@ import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
 const userGetAllJobs = () => {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     useEffect(() => {
         const fetchAllJobs = async () => {
             try {
@@ -18,7 +18,7 @@ const userGetAllJobs = () => {
             }
         }
         fetchAllJobs()
-    }, [])
+    }, [dispatch])
 }
 
 export default userGetAllJobs
