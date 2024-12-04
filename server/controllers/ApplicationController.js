@@ -42,7 +42,8 @@ export const applyJob = async (req, res) => {
             success:true
         })
     } catch (error) {
-        console.log(error);
+        console.error(error); // Log the error for debugging
+        return res.status(500).json({ message: "Failed to apply for job", success: false });
     }
 };
 

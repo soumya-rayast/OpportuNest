@@ -6,7 +6,7 @@ import { deleteJob, getAdminJobs, getAllJobs, getJobById, getSavedJobs, postJob,
 const router = express.Router()
 
 router.route("/post").post(isAuthenticated, postJob);
-router.route("/get").get(isAuthenticated, getAllJobs);
+router.route("/get").get(getAllJobs);
 router.route("/getadminjobs").get(isAuthenticated, getAdminJobs);
 router.route("/get/:id").get(isAuthenticated, getJobById)
 router.route('/saveForLater/:jobId').post(isAuthenticated,saveForLater)

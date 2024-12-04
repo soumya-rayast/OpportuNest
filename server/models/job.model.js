@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-const jobSchema = mongoose.Schema({
+const jobSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true,
@@ -22,6 +22,7 @@ const jobSchema = mongoose.Schema({
     },
     jobType: {
         type: String,
+        enum: ["Full Time", "Part Time", "Internship", "Contract"],
         required: true,
     },
     position: {
@@ -39,7 +40,7 @@ const jobSchema = mongoose.Schema({
     },
     experienceLevel: {
         type: Number,
-        required:true
+        required: true
     },
     applications: [{
         type: mongoose.Schema.Types.ObjectId,

@@ -17,8 +17,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const corsOptions = {
-    origin: process.env.CLIENT_URL,
-    credentials: true,
+    origin: 'http://localhost:5173',
+    credentials: true, 
 };
 app.use(cors(corsOptions));
 
@@ -34,4 +34,3 @@ app.listen(PORT, () => {
     connectDB();
     console.log(`Server running at port ${PORT}`);
 });
-

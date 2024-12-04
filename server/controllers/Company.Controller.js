@@ -9,51 +9,46 @@ export const registerCompany = async (req, res) => {
             return res.status(400).json({
                 message: "Company name is required",
                 success: false
-            })
+            });
         }
         let company = await Company.findOne({ name: companyName });
         if (company) {
             return res.status(400).json({
                 message: "You can't register the same company",
                 success: false
-            })
+            });
         }
 
         company = await Company.create({
             name: companyName,
             userId: req.id
-        })
+        });
         return res.status(201).json({
-            message: "Company registered successfully. ",
+            message: "Company registered successfully.",
             company,
             success: true
-        })
+        });
     } catch (error) {
-        console.log(error)
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error", success: false });
     }
 }
 
 export const getCompany = async (req, res) => {
     try {
-        const userId = req.id; //login user id
+        const userId = req.id; // logged in user id
         const companies = await Company.find({ userId });
-        if (!companies) {
-            return res.status(404).json({
-                message: "Companies not found",
-                success: true
-            })
-        }
         return res.status(200).json({
             companies,
             success: true
         });
     } catch (error) {
-        console.log(error)
+        console.error(error);
+        return res.status(500).json({ message: "Failed to retrieve companies", success: false });
     }
 }
 
-// get company by id 
-
+// Get company by id 
 export const getCompanyById = async (req, res) => {
     try {
         const companyId = req.params.id;
@@ -62,11 +57,12 @@ export const getCompanyById = async (req, res) => {
             return res.status(404).json({
                 message: "Company Not Found.",
                 success: false,
-            })
+            });
         }
-        return res.status(200).json({ company, success: true })
+        return res.status(200).json({ company, success: true });
     } catch (error) {
-        console.log(error)
+        console.error(error);
+        return res.status(500).json({ message: "Failed to retrieve company", success: false });
     }
 }
 
@@ -74,24 +70,33 @@ export const updateCompany = async (req, res) => {
     try {
         const { name, description, website, location } = req.body;
         const file = req.file;
+        const updateData = {};
 
-        const fileUri = getDataUri(file);
-        const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-        const logo = cloudResponse.secure_url;
+        if (name) updateData.name = name;
+        if (description) updateData.description = description;
+        if (website) updateData.website = website;
+        if (location) updateData.location = location;
 
-        const updateData = { name, description, website, location, logo };
+        if (file) {
+            const fileUri = getDataUri(file);
+            const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+            updateData.logo = cloudResponse.secure_url; }
+
         const company = await Company.findByIdAndUpdate(req.params.id, updateData, { new: true });
         if (!company) {
             return res.status(404).json({
-                message: "Company Not found ",
+                message: "Company Not Found.",
                 success: false,
-            })
+            });
         }
+
         return res.status(200).json({
             message: "Company information Updated.",
+            company, 
             success: true
-        })
+        });
     } catch (error) {
-        console.log(error)
+        console.error(error);
+        return res.status(500).json({ message: "Failed to update company information", success: false });
     }
 }

@@ -7,41 +7,49 @@ import cloudinary from "../utils/cloudinary.js";
 export const signUp = async (req, res) => {
     try {
         const { fullname, email, phoneNumber, password, role } = req.body;
+
+        // Validate input fields
         if (!fullname || !email || !phoneNumber || !password || !role) {
-            return res.status(400).
-                json({
-                    message: "Please Fill all the form",
-                    success: false
-                });
+            return res.status(400).json({ message: "All fields are required", success: false });
         }
-        const file = req.file;
-        const fileUri = getDataUri(file);
+
+        // Validate email format
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return res.status(400).json({ message: "Invalid email format", success: false });
+        }
+
+        // File validation
+        if (!req.file) {
+            return res.status(400).json({ message: "Profile photo is required", success: false });
+        }
+
+        const fileUri = getDataUri(req.file);
         const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
 
-        const user = await User.findOne({ email });
-        if (user) {
-            return res.status(400).json({ message: "User already exist with this email", success: false })
+        // Check for existing user
+        const userExists = await User.findOne({ email });
+        if (userExists) {
+            return res.status(400).json({ message: "Email already registered", success: false });
         }
+
+        // Hash password and create user
         const hashedPassword = await bcrypt.hash(password, 10);
-        await User.create({
+        const user = await User.create({
             fullname,
             email,
             password: hashedPassword,
             phoneNumber,
             role,
-            profile: {
-                profilePhoto: cloudResponse.secure_url,
-            }
-        })
-        return res.status(201).
-            json({
-                message: 'Account created successfully',
-                success: true
-            })
+            profile: { profilePhoto: cloudResponse.secure_url }
+        });
+
+        return res.status(201).json({ message: "Account created successfully", success: true, data: user });
     } catch (error) {
-        console.log(error)
+        console.error("Error during sign-up:", error.message);
+        return res.status(500).json({ message: "Internal server error", success: false });
     }
-}
+};
+
 export const signIn = async (req, res) => {
     try {
         const { email, password, role } = req.body;
@@ -83,17 +91,21 @@ export const signIn = async (req, res) => {
         return res.status(200).cookie('token', token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpsOnly: true, sameSite: 'strict' })
             .json({ message: `Welcome Back `, user, success: true })
     } catch (error) {
-        console.log(error)
+        console.error("Error during sign-up:", error.message);
+        return res.status(500).json({ message: "Internal server error", success: false });
     }
+
 }
 
 export const logout = async (req, res) => {
     try {
-        return res.status(200).cookie("token", "", { maxAge: 0 }).
-            json({ message: "Logout out successfully", success: true })
+        return res.status(200).cookie("token", "", { maxAge: 0, httpOnly: true, sameSite: "lax" })
+            .json({ message: "Logged out successfully", success: true });
     } catch (error) {
-        console.log(error)
+        console.error("Error during sign-up:", error.message);
+        return res.status(500).json({ message: "Internal server error", success: false });
     }
+
 }
 
 export const updateProfile = async (req, res) => {
@@ -138,6 +150,7 @@ export const updateProfile = async (req, res) => {
         }
         return res.status(200).json({ message: "Profile updated successfully.", user, success: true })
     } catch (error) {
-        console.log(error)
+        console.error("Error during sign-up:", error.message);
+        return res.status(500).json({ message: "Internal server error", success: false });
     }
 }
