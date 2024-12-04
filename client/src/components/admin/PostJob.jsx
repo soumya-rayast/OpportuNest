@@ -1,15 +1,15 @@
-import React, { useState } from 'react'
-import Navbar from '../shared/Navbar'
-import { Label } from '../ui/label'
-import { Input } from '../ui/input'
-import { Button } from '../ui/button'
-import { useSelector } from 'react-redux'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
-import { JOB_API_END_POINT } from '@/utils/constant'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
-import { toast } from 'sonner'
-import { Loader2 } from 'lucide-react'
+import React, { useState } from 'react';
+import Navbar from '../shared/Navbar';
+import { Label } from '../ui/label';
+import { Input } from '../ui/input';
+import { Button } from '../ui/button';
+import { useSelector } from 'react-redux';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { JOB_API_END_POINT } from '@/utils/constant';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+import { Loader2 } from 'lucide-react';
 
 const PostJob = () => {
     const [input, setInput] = useState({
@@ -22,44 +22,49 @@ const PostJob = () => {
         experience: "",
         position: 0,
         companyId: ""
-    })
+    });
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { companies } = useSelector(store => store.company);
 
-    const { companies } = useSelector(store => store.company)
     const changeEventHandler = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value });
-    }
+    };
+
     const selectChangeHandler = (value) => {
         const selectedCompany = companies.find((company) => company.name.toLowerCase() === value);
-        setInput({ ...input, companyId: selectedCompany._id })
-    }
+        setInput({ ...input, companyId: selectedCompany._id });
+    };
+
     const submitHandler = async (e) => {
         e.preventDefault();
+        setLoading(true); // Set loading state before API call
         try {
             const res = await axios.post(`${JOB_API_END_POINT}/post`, input, {
                 headers: {
                     "Content-Type": "application/json"
                 },
                 withCredentials: true
-            })
+            });
             if (res.data.success) {
                 toast.success(res.data.message);
-                navigate("/admin/jobs")
+                navigate("/admin/jobs");
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.response.data.message)
+            toast.error(error.response.data.message);
         } finally {
-            setLoading(false)
+            setLoading(false); // Reset loading state after API call
         }
-    }
+    };
+
     return (
-        <div>
+        <div className="bg-gray-50 min-h-screen">
             <Navbar />
-            <div className='flex items-center justify-center w-screen my-5 mt-20  '>
-                <form action="" onSubmit={submitHandler} className='p-8 max-4-zl border border-purple-600 shadow-lg rounded-md'>
-                    <div className='grid grid-cols-2 gap-2'>
+            <div className='flex items-center justify-center w-screen my-5 mt-20'>
+                <form onSubmit={submitHandler} className='p-8 max-w-lg border border-purple-600 shadow-lg rounded-md bg-white'>
+                    <h1 className='text-2xl font-bold mb-6'>Post a Job</h1>
+                    <div className='grid grid-cols-2 gap-4'>
                         <div>
                             <Label>Title</Label>
                             <Input
@@ -67,7 +72,8 @@ const PostJob = () => {
                                 name="title"
                                 value={input.title}
                                 onChange={changeEventHandler}
-                                className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
+                                className="my-1"
+                                required
                             />
                         </div>
                         <div>
@@ -77,7 +83,8 @@ const PostJob = () => {
                                 name="description"
                                 value={input.description}
                                 onChange={changeEventHandler}
-                                className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
+                                className="my-1"
+                                required
                             />
                         </div>
                         <div>
@@ -87,7 +94,7 @@ const PostJob = () => {
                                 name="requirements"
                                 value={input.requirements}
                                 onChange={changeEventHandler}
-                                className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
+                                className="my-1"
                             />
                         </div>
                         <div>
@@ -98,7 +105,8 @@ const PostJob = () => {
                                 value={input.salary}
                                 onChange={changeEventHandler}
                                 placeholder="LPA"
-                                className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
+                                className="my-1"
+                                required
                             />
                         </div>
                         <div>
@@ -108,7 +116,8 @@ const PostJob = () => {
                                 name="location"
                                 value={input.location}
                                 onChange={changeEventHandler}
-                                className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
+                                className="my-1"
+                                required
                             />
                         </div>
                         <div>
@@ -118,7 +127,7 @@ const PostJob = () => {
                                 name="jobType"
                                 value={input.jobType}
                                 onChange={changeEventHandler}
-                                className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
+                                className="my-1"
                             />
                         </div>
                         <div>
@@ -128,22 +137,23 @@ const PostJob = () => {
                                 name="experience"
                                 value={input.experience}
                                 onChange={changeEventHandler}
-                                className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
+                                className="my-1"
                             />
                         </div>
                         <div>
-                            <Label>No. Of Position</Label>
+                            <Label>No. Of Positions</Label>
                             <Input
                                 type="number"
                                 name="position"
                                 value={input.position}
                                 onChange={changeEventHandler}
-                                className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
+                                className="my-1"
+                                required
                             />
                         </div>
                         {companies.length > 0 && (
                             <Select onValueChange={selectChangeHandler}>
-                                <SelectTrigger className='w-[180px]'>
+                                <SelectTrigger className='w-full'>
                                     <SelectValue placeholder="Select company" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -162,17 +172,26 @@ const PostJob = () => {
                         )}
                     </div>
 
-                    {
-                        loading ? <Button className='w-full my-4'> <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait </Button> :
-                            <Button type='submit' className='w-full my-4 bg-purple-600'>Post Job</Button>
-                    }
-                    {
-                        companies.length === 0 && <p className='text-xs text-red-600 font-bold text-center my-3'> *Please register a company first , before posting a jobs</p>
-                    }
+                    {loading ? (
+                        <Button className='w-full my-4' disabled>
+                            <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                            Please wait...
+                        </Button>
+                    ) : (
+                        <Button type='submit' className='w-full my-4 bg-purple-600'>
+                            Post Job
+                        </Button>
+                    )}
+
+                    {companies.length === 0 && (
+                        <p className='text-xs text-red-600 font-bold text-center my-3'>
+                            *Please register a company first before posting jobs.
+                        </p>
+                    )}
                 </form>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default PostJob
+export default PostJob;

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from './ui/button';
 import { Bookmark } from 'lucide-react';
 import { Avatar, AvatarImage } from '@radix-ui/react-avatar';
@@ -16,7 +16,7 @@ const Job = ({ job }) => {
         const createdAt = new Date(mongodbTime);
         const currentTime = new Date();
         const timeDifference = currentTime - createdAt;
-        return Math.floor(timeDifference / (1000 * 24 * 60 * 60));
+        return Math.floor(timeDifference / (1000 * 60 * 60 * 24));
     };
 
     const saveForLaterHandler = async () => {
@@ -35,40 +35,38 @@ const Job = ({ job }) => {
     };
 
     if (!job) {
-        return <div>Loading...</div>;
+        return <div className="flex justify-center items-center h-full">Loading...</div>;
     }
 
     return (
-        <div className='p-2 rounded-md shadow-xl bg-white border border-gray-100 shadow-purple-300 w-80 h-80 overflow-hidden'>
+        <div className='p-4 rounded-lg shadow-lg bg-white border border-gray-200 transition-transform duration-300 hover:scale-105'>
             <div className='flex items-center justify-between'>
-                <p className='text-sm text-gray-500'>{daysAgo(job?.createdAt) === 0 ? "Today" : `${daysAgo(job?.createdAt)} days ago`}</p>
-                <Button className="rounded-full" size='icon' variant="outline" onClick={saveForLaterHandler}>
-                    <Bookmark className={isSaved ? "text-purple-500" : ""} />
+                <p className='text-sm text-gray-500'>{daysAgo(job.createdAt) === 0 ? "Today" : `${daysAgo(job.createdAt)} days ago`}</p>
+                <Button className="rounded-full" size='icon' variant="outline" onClick={saveForLaterHandler} aria-label={isSaved ? "Unsave job" : "Save job"}>
+                    <Bookmark className={isSaved ? "text-purple-500" : "text-gray-500"} />
                 </Button>
             </div>
-            <div className='flex items-center gap-3 my-2'>
-                <Button className='p-6' variant="outline" size="icon">
-                    <Avatar>
-                        <AvatarImage src={job?.company?.logo || '/default-logo.png'} alt='logo' />
-                    </Avatar>
-                </Button>
+            <div className='flex items-center gap-3 my-3'>
+                <Avatar>
+                    <AvatarImage src={job.company?.logo || '/default-logo.png'} alt={`${job.company?.name} logo`} className='w-[40px] h-[40px]' />
+                </Avatar>
                 <div>
-                    <h1 className='font-medium text-lg truncate'>{job?.company?.name || 'Company Name'}</h1>
-                    <p className='truncate'>{job?.location || 'Location not specified'}</p>
+                    <h1 className='font-medium text-lg truncate'>{job.company?.name || 'Company Name'}</h1>
+                    <p className='truncate text-gray-600'>{job.location || 'Location not specified'}</p>
                 </div>
             </div>
-            <div className=''>
-                <h1 className='font-bold text-lg my-2 truncate'>{job?.title || 'Job Title'}</h1>
-                <p className='text-sm text-gray-600 overflow-hidden text-ellipsis h-16'>{job?.description || 'No description available'}</p>
+            <div>
+                <h1 className='font-bold text-lg my-2 truncate'>{job.title || 'Job Title'}</h1>
+                <p className='text-sm text-gray-600 overflow-hidden text-ellipsis'>{job.description || 'No description available'}</p>
             </div>
             <div className='flex items-center gap-3 mt-4'>
-                <Badge className='text-purple-600 font-bold' variant="ghost">{job?.position || 'N/A'} Positions</Badge>
-                <Badge className='text-purple-600 font-bold' variant="ghost">{job?.jobType || 'Full'} Time</Badge>
-                <Badge className='text-purple-600 font-bold' variant="ghost">{job?.salary ? `${job.salary} LPA` : 'Salary not specified'}</Badge>
+                <Badge className='text-purple-600 font-bold' variant="ghost">{job.position || 'N/A'} Positions</Badge>
+                <Badge className='text-purple-600 font-bold' variant="ghost">{job.jobType || 'Full'} Time</Badge>
+                <Badge className='text-purple-600 font-bold' variant="ghost">{job.salary ? `${job.salary} LPA` : 'Salary not specified'}</Badge>
             </div>
             <div className='flex items-center gap-4 mt-4'>
-                <Button onClick={() => navigate(`/description/${job?._id}`)} variant='outline'>Details</Button>
-                <Button className="bg-purple-500" onClick={saveForLaterHandler}>Save For Later</Button>
+                <Button onClick={() => navigate(`/description/${job._id}`)} variant='outline'>Details</Button>
+                <Button className="bg-purple-500 text-white hover:bg-purple-600" onClick={saveForLaterHandler}>Save For Later</Button>
             </div>
         </div>
     );

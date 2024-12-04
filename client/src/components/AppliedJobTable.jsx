@@ -1,10 +1,15 @@
-import React from 'react'
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from './ui/table'
-import { Badge } from './ui/badge'
-import { useSelector } from 'react-redux'
+import React from 'react';
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
+import { Badge } from './ui/badge';
+import { useSelector } from 'react-redux';
+import { Button } from './ui/button'; // Assuming you have a Button component
 
 const AppliedJobTable = () => {
-    const { allAppliedJobs } = useSelector(store => store.job)
+    const { allAppliedJobs, loading } = useSelector(store => store.job); // Assume you have a loading state in Redux
+
+    if (loading) {
+        return <div className="text-center">Loading applied jobs...</div>; // Loading indicator
+    }
 
     return (
         <div className='mx-4'>
@@ -21,11 +26,20 @@ const AppliedJobTable = () => {
                 <TableBody>
                     {
                         !allAppliedJobs || allAppliedJobs.length === 0 ? (
-                            <span>You haven't applied for any job yet.</span>
+                            <TableRow>
+                                <TableCell colSpan={4} className="text-center">
+                                    <span>You haven't applied for any job yet.</span>
+                                    <div className="mt-2">
+                                        <Button onClick={() => {/* Navigate to jobs page or show available jobs */}}>
+                                            View Available Jobs
+                                        </Button>
+                                    </div>
+                                </TableCell>
+                            </TableRow>
                         ) : (
                             allAppliedJobs.map((appliedJob) => (
-                                <TableRow key={appliedJob._id}>
-                                    <TableCell>{appliedJob?.createdAt?.split("T")[0]}</TableCell>
+                                <TableRow key={appliedJob._id} className="hover:bg-gray-100 transition">
+                                    <TableCell>{new Date(appliedJob?.createdAt).toLocaleDateString()}</TableCell>
                                     <TableCell>{appliedJob.job?.title}</TableCell>
                                     <TableCell>{appliedJob.job?.company?.name}</TableCell>
                                     <TableCell className='text-right'>
@@ -40,7 +54,7 @@ const AppliedJobTable = () => {
                 </TableBody>
             </Table>
         </div>
-    )
-}
+    );
+};
 
-export default AppliedJobTable
+export default AppliedJobTable;

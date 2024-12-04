@@ -32,16 +32,20 @@ const Applicants = () => {
         fetchAllApplicants();
     }, [params.id, dispatch]); // Added params.id to dependency array
 
-    if (loading) {
-        return <div className="text-center">Loading...</div>; // Loading indicator
-    }
-
     return (
-        <div>
+        <div className="bg-gray-50 min-h-screen">
             <Navbar />
-            <div className='max-w-7xl mx-auto mt-20'>
-                <h1 className='text-xl my-5 font-bold mx-10'>Applicants: {applicants?.applications?.length || 0}</h1>
-                <ApplicantsTable />
+            <div className='max-w-7xl mx-auto mt-20 p-6 bg-white rounded-lg shadow-md'>
+                <h1 className='text-2xl font-bold mb-4'>
+                    Applicants: <span className="text-purple-600">{applicants?.applications?.length || 0}</span>
+                </h1>
+                {loading ? (
+                    <div className="flex justify-center items-center h-48">
+                        <span className="text-lg text-gray-500">Loading...</span>
+                    </div>
+                ) : (
+                    <ApplicantsTable />
+                )}
             </div>
         </div>
     );
