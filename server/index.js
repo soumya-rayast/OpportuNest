@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const corsOptions = {
-    origin: 'https://opportunest-1-s7oc.onrender.com/',
+    origin: 'http://localhost:5173/',
     credentials: true, 
 };
 app.use(cors(corsOptions));
@@ -33,4 +33,4 @@ app.use("/api/v1/application",applicationRoute)
 app.listen(PORT, () => {
     connectDB();
     console.log(`Server running at port ${PORT}`);
-});
+}); 

@@ -94,8 +94,8 @@ const AuthPage = () => {
   return (
     <div>
       <Navbar />
-      <div className="flex items-center justify-center max-w-7xl mx-auto mt-14">
-        <form onSubmit={submitHandler} className="w-1/2 shadow-2xl border border-purple-500 rounded-md p-4 my-10">
+      <div className="flex items-center justify-center md:max-w-7xl mx-auto mt-14">
+        <form onSubmit={submitHandler} className="md:w-1/2 mx-3 shadow-2xl border border-purple-500 rounded-md p-4 my-10">
           <h1 className="font-bold text-xl mb-5 text-purple-600">{isSignup ? 'Sign Up' : 'Login'}</h1>
           {isSignup && (
             <div className="my-2">
