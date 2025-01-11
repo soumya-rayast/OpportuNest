@@ -20,5 +20,4 @@ const userGetAllJobs = () => {
         fetchAllJobs()
     }, [dispatch])
 }
-
 export default userGetAllJobs

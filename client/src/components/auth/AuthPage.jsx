@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../shared/Navbar';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
-import { RadioGroup } from "@/components/ui/radio-group";
 import { Button } from '../ui/button';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -10,7 +9,7 @@ import { USER_API_END_POINT } from '@/utils/constant';
 import { toast } from 'sonner';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoading, setUser } from '@/redux/authSlice';
-import { Loader } from 'lucide-react';
+import { Loader, Eye, EyeOff } from 'lucide-react';
 
 const AuthPage = () => {
   const [isSignup, setIsSignup] = useState(false);
@@ -19,9 +18,11 @@ const AuthPage = () => {
     email: '',
     phoneNumber: '',
     password: '',
-    role: '',
+    role: 'student',
     file: '',
   });
+  const [preview, setPreview] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user, loading } = useSelector((store) => store.auth);
@@ -31,11 +32,31 @@ const AuthPage = () => {
   };
 
   const changeFileHandler = (e) => {
-    setInput({ ...input, file: e.target.files?.[0] });
+    const file = e.target.files?.[0];
+    setInput({ ...input, file });
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const validateForm = () => {
+    if (!input.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      toast.error('Invalid email format.');
+      return false;
+    }
+    if (isSignup) {
+      if (!input.fullname || !input.phoneNumber || input.phoneNumber.length < 10) {
+        toast.error('Please fill in all required fields.');
+        return false;
+      }
+    }
+    return true;
   };
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+
     try {
       dispatch(setLoading(true));
       if (isSignup) {
@@ -54,11 +75,9 @@ const AuthPage = () => {
           },
           withCredentials: true,
         });
-        
-        console.log("Signup Response:", res.data);
+
         if (res.data.success) {
           dispatch(setUser(res.data.user));
-          console.log("User State Updated:", res.data.user);
           toast.success(res.data.message);
         }
       } else {
@@ -68,16 +87,13 @@ const AuthPage = () => {
           },
           withCredentials: true,
         });
-        
-        console.log("Login Response:", res.data);
+
         if (res.data.success) {
           dispatch(setUser(res.data.user));
-          console.log("User State Updated:", res.data.user);
           toast.success(res.data.message);
         }
       }
     } catch (error) {
-      console.error("Error:", error);
       toast.error(error.response?.data?.message || 'An error occurred. Please try again.');
     } finally {
       dispatch(setLoading(false));
@@ -86,20 +102,22 @@ const AuthPage = () => {
 
   useEffect(() => {
     if (user) {
-      console.log("User logged in:", user);
-      navigate('/'); 
+      navigate('/');
     }
   }, [user, navigate]);
 
   return (
     <div>
       <Navbar />
-      <div className="flex items-center justify-center md:max-w-7xl mx-auto mt-14">
-        <form onSubmit={submitHandler} className="md:w-1/2 mx-3 shadow-2xl border border-purple-500 rounded-md p-4 my-10">
-          <h1 className="font-bold text-xl mb-5 text-purple-600">{isSignup ? 'Sign Up' : 'Login'}</h1>
+      <div className="flex items-center justify-center md:max-w-4xl mx-auto mt-14 p-5">
+        <form onSubmit={submitHandler} className="w-full bg-white shadow-xl border rounded-lg p-6">
+          <h1 className="text-2xl font-bold text-center text-purple-600 mb-5">
+            {isSignup ? 'Create Your Account' : 'Welcome Back'}
+          </h1>
+
           {isSignup && (
-            <div className="my-2">
-              <Label className="text-purple-600 m-1">Full name</Label>
+            <div className="my-4">
+              <Label className="text-purple-600 mb-1">Full Name</Label>
               <Input
                 type="text"
                 placeholder="Enter Your Name"
@@ -109,8 +127,9 @@ const AuthPage = () => {
               />
             </div>
           )}
-          <div className="my-2">
-            <Label className="text-purple-600 m-1">Email</Label>
+
+          <div className="my-4">
+            <Label className="text-purple-600 mb-1">Email</Label>
             <Input
               type="email"
               placeholder="xyz@gmail.com"
@@ -119,11 +138,12 @@ const AuthPage = () => {
               name="email"
             />
           </div>
+
           {isSignup && (
-            <div className="my-2">
-              <Label className="text-purple-600 m-1">Phone Number</Label>
+            <div className="my-4">
+              <Label className="text-purple-600 mb-1">Phone Number</Label>
               <Input
-                type="number"
+                type="text"
                 placeholder="+91 1234567890"
                 value={input.phoneNumber}
                 onChange={changeEventHandler}
@@ -131,68 +151,82 @@ const AuthPage = () => {
               />
             </div>
           )}
-          <div className="my-2">
-            <Label className="text-purple-600 m-1">Password</Label>
+
+          <div className="my-4 relative">
+            <Label className="text-purple-600 mb-1">Password</Label>
             <Input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               placeholder="********"
               value={input.password}
               onChange={changeEventHandler}
               name="password"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-2 top-9 text-purple-600"
+            >
+              {showPassword ? <EyeOff /> : <Eye />}
+            </button>
           </div>
-          <div className="flex flex-col items-center justify-between">
-            <RadioGroup className="flex flex-col items-center">
-              <div className="flex items-center space-x-2">
+
+          <div className="my-4">
+            <Label className="text-purple-600 mb-1">Role</Label>
+            <div className="flex space-x-4">
+              <label className="flex items-center space-x-2">
                 <Input
                   type="radio"
                   name="role"
                   value="student"
-                  className="cursor-pointer"
                   checked={input.role === 'student'}
                   onChange={changeEventHandler}
                 />
-                <Label className="text-purple-600 m-1">Student</Label>
-              </div>
-              <div className="flex items-center space-x-2">
+                <span>Student</span>
+              </label>
+              <label className="flex items-center space-x-2">
                 <Input
                   type="radio"
                   name="role"
                   value="recruiter"
-                  className="cursor-pointer"
                   checked={input.role === 'recruiter'}
                   onChange={changeEventHandler}
                 />
-                <Label className="text-purple-600 m-1">Recruiter</Label>
-              </div>
-            </RadioGroup>
-            {isSignup && (
-              <div className=''>
-                <Label className="text-purple-600 m-1">Profile</Label>
-                <Input type="file" accept="image/*" className="cursor-pointer" onChange={changeFileHandler} />
-              </div>
-            )}
+                <span>Recruiter</span>
+              </label>
+            </div>
           </div>
-          {loading ? (
-            <Button className="w-full my-4">
-              <Loader className="mr-2 h-4 w-4 animate-spin" /> Please wait
-            </Button>
-          ) : (
-            <Button type="submit" className="w-full my-4 bg-purple-600">
-              {isSignup ? 'Signup' : 'Login'}
-            </Button>
+
+          {isSignup && (
+            <div className="my-4">
+              <Label className="text-purple-600 mb-1">Profile Picture</Label>
+              <Input type="file" accept="image/*" onChange={changeFileHandler} />
+              {preview && <img src={preview} alt="Preview" className="w-16 h-16 mt-3 rounded-full" />}
+            </div>
           )}
-          <span>
-            {isSignup ? 'Already have an account?' : "Don't have an account?"}{' '}
-            <Button
-              type="button"
-              variant="link"
-              onClick={() => setIsSignup(!isSignup)}
-              className="text-purple-600 ml-1"
-            >
-              {isSignup ? 'Login' : 'Signup'}
-            </Button>
-          </span>
+
+          <Button type="submit" className="w-full bg-purple-600 text-white py-2 mt-5">
+            {loading ? (
+              <span className="flex items-center justify-center">
+                <Loader className="mr-2 h-4 w-4 animate-spin" />
+                Processing...
+              </span>
+            ) : (
+              isSignup ? 'Sign Up' : 'Login'
+            )}
+          </Button>
+
+          <div className="text-center mt-4">
+            <span>
+              {isSignup ? 'Already have an account?' : "Don't have an account?"}{' '}
+              <button
+                type="button"
+                className="text-purple-600 underline"
+                onClick={() => setIsSignup(!isSignup)}
+              >
+                {isSignup ? 'Login' : 'Sign Up'}
+              </button>
+            </span>
+          </div>
         </form>
       </div>
     </div>

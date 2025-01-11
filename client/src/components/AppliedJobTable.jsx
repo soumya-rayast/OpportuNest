@@ -2,13 +2,13 @@ import React from 'react';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Badge } from './ui/badge';
 import { useSelector } from 'react-redux';
-import { Button } from './ui/button'; // Assuming you have a Button component
+import { Button } from './ui/button';
 
 const AppliedJobTable = () => {
-    const { allAppliedJobs, loading } = useSelector(store => store.job); // Assume you have a loading state in Redux
+    const { allAppliedJobs, loading } = useSelector(store => store.job); 
 
     if (loading) {
-        return <div className="text-center">Loading applied jobs...</div>; // Loading indicator
+        return <div className="text-center">Loading applied jobs...</div>; 
     }
 
     return (

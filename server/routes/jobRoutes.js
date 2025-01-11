@@ -13,4 +13,4 @@ router.route('/saveForLater/:jobId').post(isAuthenticated,saveForLater)
 router.route('/getSavedJobs').get(isAuthenticated, getSavedJobs);
 router.route('/delete/:id').delete(isAuthenticated,deleteJob)
 
-export default router;
+export default router;  

@@ -12,7 +12,7 @@ import Footer from '../shared/Footer';
 
 const Browse = () => {
     userGetAllJobs();
-    const { allJobs, loading } = useSelector(store => store.job); // Assuming loading is in job slice
+    const { allJobs, loading } = useSelector(store => store.job); 
     const dispatch = useDispatch();
 
     useEffect(() => {

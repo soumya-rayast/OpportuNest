@@ -4,7 +4,6 @@ import jobSlice from "./jobSlice.js"
 import companySlice from "./CompanySlice.js"
 import applicationSlice from "./applicationsSlice.js"
 import {
-    persistStore,
     persistReducer,
     FLUSH,
     REHYDRATE,
