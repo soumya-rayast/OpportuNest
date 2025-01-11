@@ -1,4 +1,4 @@
-export const API_BASE_URL = "https://opportunest-mjhg.onrender.com";
+export const API_BASE_URL = "https://opportunest-4xl3.onrender.com";
 
 export const USER_API_END_POINT = `${API_BASE_URL}/user`;
 export const COMPANY_API_END_POINT = `${API_BASE_URL}/company`;
